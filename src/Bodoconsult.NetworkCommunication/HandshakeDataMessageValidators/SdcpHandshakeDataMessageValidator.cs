@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
 
+using Bodoconsult.NetworkCommunication.EnumAndStates;
 using Bodoconsult.NetworkCommunication.Interfaces;
 using Bodoconsult.NetworkCommunication.Messages;
-using Bodoconsult.NetworkCommunication.EnumAndStates;
 
-namespace Bodoconsult.NetworkCommunication.DataMessaging.HandshakeValidators
+namespace Bodoconsult.NetworkCommunication.HandshakeDataMessageValidators
 {
 
     /// <summary>
@@ -63,12 +63,12 @@ namespace Bodoconsult.NetworkCommunication.DataMessaging.HandshakeValidators
                 case HandShakeMessageType.Ack:
                     context.ProcessExecutionResult = OrderExecutionResultState.Successful;
                     context.CurrentSendAttempsCount = 0;
-                    context.DataMessagingConfig.MonitorLogger?.LogDebug($"Message {context.Message.MessageId}: ACK received [{hs.HandshakeMessageType:X2}]");
+                    context.DataMessagingConfig.MonitorLogger?.LogDebug($"Message {context.Message.MessageId}: ACK received");
                     break;
 
                 case HandShakeMessageType.Nack:
                     context.ProcessExecutionResult = OrderExecutionResultState.Nack;
-                    context.DataMessagingConfig.MonitorLogger?.LogWarning($"Message {context.Message.MessageId} : NAK received [ {hs.HandshakeMessageType:X2}]");
+                    context.DataMessagingConfig.MonitorLogger?.LogWarning($"Message {context.Message.MessageId}: NAK received");
                     break;
 
                 case HandShakeMessageType.Can:

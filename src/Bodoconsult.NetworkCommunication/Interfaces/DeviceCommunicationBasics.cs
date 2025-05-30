@@ -21,6 +21,11 @@ namespace Bodoconsult.NetworkCommunication.Interfaces
         /// </summary>
         public static int DataMessageMinPacketSize { get; set; } = 0;
 
+        /// <summary>
+        /// The maximum size of a data message excluding start, end and data block bytes
+        /// </summary>
+        public static int DataMessageMaxPacketSize { get; set; } = 1000;
+
         #endregion
 
 
@@ -102,5 +107,6 @@ namespace Bodoconsult.NetworkCommunication.Interfaces
 
         #endregion
 
+        
     }
 }

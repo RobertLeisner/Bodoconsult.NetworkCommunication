@@ -9,10 +9,10 @@
 //using System.Net.Sockets;
 //using System.Text;
 //using System.Threading.Tasks;
-//using RoyoTech.StSys.SQL.Model.Logging;
-//using RoyoTech.StSys.deviceCommunication.Interfaces;
+//using Bodoconsult EDV-Dienstleistungen GmbH.StSys.SQL.Model.Logging;
+//using Bodoconsult EDV-Dienstleistungen GmbH.StSys.deviceCommunication.Interfaces;
 
-//namespace RoyoTech.StSys.deviceCommunication.Transport.TcpIp
+//namespace Bodoconsult EDV-Dienstleistungen GmbH.StSys.deviceCommunication.Transport.TcpIp
 //{
 //    /// <summary>
 //    /// Current implementation of <see cref="ISocketProxy"/>

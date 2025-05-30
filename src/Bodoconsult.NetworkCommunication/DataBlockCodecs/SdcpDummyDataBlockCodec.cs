@@ -1,12 +1,15 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
-namespace Bodoconsult.NetworkCommunication.Interfaces
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Bodoconsult.NetworkCommunication.Interfaces;
+
+namespace Bodoconsult.NetworkCommunication.DataBlockCodecs
 {
-    /// <summary>
-    /// This class is implemented by classes used to encode or decode
-    /// bytes contained in the datablock of a incomming device message
-    /// </summary>
-    public interface IDataBlockCodec
+    public class SdcpDummyDataBlockCodec: IDataBlockCodec
     {
         /// <summary>
         /// Method encode an instance of Datablock in bytes array.
@@ -15,8 +18,10 @@ namespace Bodoconsult.NetworkCommunication.Interfaces
         /// <param name="data">The array as list to add the datablock to</param>
         /// <param name="datablock">Current datablock object</param>
         /// <returns>a byte array with datablock infos</returns>
-        void EncodeDataBlock(List<byte> data, IDataBlock datablock);
-
+        public void EncodeDataBlock(List<byte> data, IDataBlock datablock)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Method decodes an incoming bytes array to an instance of Datablock object
@@ -24,6 +29,9 @@ namespace Bodoconsult.NetworkCommunication.Interfaces
         /// </summary>
         /// <param name="datablockBytes">Datablock bytes received</param>
         /// <returns>Datablock object</returns>
-        IDataBlock DecodeDataBlock(Memory<byte> datablockBytes);
+        public IDataBlock DecodeDataBlock(Memory<byte> datablockBytes)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

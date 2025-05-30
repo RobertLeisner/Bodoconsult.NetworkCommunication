@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bodoconsult.NetworkCommunication.DataMessaging.DataMessageP
+namespace Bodoconsult.NetworkCommunication.DataMessageProcessors
 {
     /// <summary>
     /// Current implementation of <see cref="IDataMessageProcessor"/> for SDCP protocol.

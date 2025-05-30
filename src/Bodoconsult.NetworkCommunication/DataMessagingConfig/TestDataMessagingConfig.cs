@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
-using Bodoconsult.NetworkCommunication.Interfaces;
 using Bodoconsult.App.Interfaces;
 using Bodoconsult.NetworkCommunication.Delegates;
+using Bodoconsult.NetworkCommunication.Interfaces;
 
-namespace Bodoconsult.NetworkCommunication.DataMessaging
+namespace Bodoconsult.NetworkCommunication.DataMessagingConfig
 {
     /// <summary>
     /// Config file for one the client-server network communication with one client device
     /// </summary>
-    public class TestDataMessagingConfig: IDataMessagingConfigTcpIp
+    public class DefaultDataMessagingConfig: IDataMessagingConfigTcpIp
     {
 
         /// <summary>

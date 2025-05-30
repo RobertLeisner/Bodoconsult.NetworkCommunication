@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bodoconsult.NetworkCommunication.DataMessaging.DataMessageValidators
+namespace Bodoconsult.NetworkCommunication.DataMessageValidators
 {
     /// <summary>
     /// SDCP protocol implementation of <see cref="IDataMessageValidator"/>

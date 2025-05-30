@@ -68,5 +68,10 @@ namespace Bodoconsult.NetworkCommunication.Messages
         {
             return $"SdcpDataMessage ID {MessageId} {MessageType.ToString()}";
         }
+
+        /// <summary>
+        /// Data block stored in the message
+        /// </summary>
+        public IDataBlock DataBlock { get; set; }
     }
 }

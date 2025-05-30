@@ -9,8 +9,7 @@ namespace Bodoconsult.NetworkCommunication.Interfaces
         /// </summary>
         /// <param name="data">device message data to send</param>
         /// <param name="dataBlock">Current datablock instance</param>
-        /// <param name="firmware">Current firmware version</param>
-        void FromDataBlockToBytes(List<byte> data, IDataBlock dataBlock, uint firmware);
+        void FromDataBlockToBytes(List<byte> data, IDataBlock dataBlock);
 
         /// <summary>
         /// Get the correct codec for a given datablock
@@ -23,8 +22,7 @@ namespace Bodoconsult.NetworkCommunication.Interfaces
         /// Decode a given datablock as byte array to the related internal datablock object
         /// </summary>
         /// <param name="dataBlockBytes">Received datablock as byte array</param>
-        /// <param name="firmware">Current firmware version</param>
         /// <returns>Datablock object or null if no fitting codec was found</returns>
-        IDataBlock FromBytesToDataBlock(Memory<byte> dataBlockBytes, uint firmware);
+        IDataBlock FromBytesToDataBlock(Memory<byte> dataBlockBytes);
     }
 }

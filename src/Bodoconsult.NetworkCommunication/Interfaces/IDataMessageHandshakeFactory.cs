@@ -5,7 +5,7 @@ namespace Bodoconsult.NetworkCommunication.Interfaces
     public interface IDataMessageHandshakeFactory
     {
         /// <summary>
-        /// Get a ACK handshake message
+        /// Get an ACK handshake message
         /// </summary>
         /// <param name="message">Current message received</param>
         /// <returns>ACK handshake message to send</returns>

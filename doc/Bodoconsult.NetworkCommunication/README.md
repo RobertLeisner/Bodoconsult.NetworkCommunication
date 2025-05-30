@@ -654,13 +654,141 @@ public class SdcpDataMessageProcessor : IDataMessageProcessor
 }
 ```
 
-``` csharp
+# Implement the message codecs to decode and encode to byte array: BaseDataMessageCodec
 
+You need a minimum of two codes to decode and encode to byte array: one handshake codec and one data message codec. 
+
+For testing purposes or certain poduction tasks there is a RawDataMessageCodec. It forwards the received or sent bytes plain into or from RawDataMessageCodec.RawMessageData.
+
+``` csharp
+/// <summary>
+/// Codec to encode and decode raw data messages
+/// </summary>
+public class RawDataMessageCodec : BaseDataMessageCodec
+{
+
+
+	public RawDataMessageCodec()
+	{
+		ExpectedMinimumLength = 1;
+		ExpectedMaximumLength = int.MaxValue;
+	}
+
+	/// <summary>
+	/// Decode a data message to an <see cref="IDataMessage"/> instance
+	/// </summary>
+	/// <param name="data">Data message bytes received</param>
+	/// <returns>Decoding result</returns>
+	public override InboundCodecResult DecodeDataMessage(Memory<byte> data)
+	{
+		var result = new InboundCodecResult
+		{
+			DataMessage =new RawDataMessage
+			{
+				RawMessageData = data
+			},
+			ErrorCode = 0
+		};
+		return result;
+	}
+
+	/// <summary>
+	/// Encodes a message to a byte array to send to receiver
+	/// </summary>
+	/// <param name="message">Data message to send</param>
+	/// <returns>Byte array as optimized <see cref="ReadOnlyMemory{T}"/> to send</returns>
+	public override OutboundCodecResult EncodeDataMessage(IDataMessage message)
+	{
+		var result = new OutboundCodecResult();
+		if (message is not RawDataMessage rm)
+		{
+			result.ErrorMessage = "RawDataMessage required for RawDataMessageCodec";
+			result.ErrorCode= 1;
+			return result;
+		}
+
+		if (message.RawMessageData.Length==0)
+		{
+			result.ErrorMessage = "No data provided for message";
+			result.ErrorCode= 1;
+			return result;
+		}
+
+		message.RawMessageData = rm.RawMessageData;
+		return result;
+	}
+}
 ```
 
-``` csharp
+# Handshake codec implementation 
 
+Here a handshake codec implementation for SDCP protocol:
+
+``` csharp
+/// <summary>
+/// Codec to encode and decode handshake messages for SDCP protocol
+/// </summary>
+public class SdcpHandshakeMessageCodec : BaseDataMessageCodec
+{
+
+	public SdcpHandshakeMessageCodec()
+	{
+		ExpectedMinimumLength = 1;
+		ExpectedMaximumLength = 1;
+	}
+
+	/// <summary>
+	/// Decode a data message to an <see cref="IDataMessage"/> instance
+	/// </summary>
+	/// <param name="data">Data message bytes received</param>
+	/// <returns>Decoding result</returns>
+	public override InboundCodecResult DecodeDataMessage(Memory<byte> data)
+	{
+		var result = CheckExpectedLengths(data.Length);
+
+		if (result.ErrorCode != 0)
+		{
+			return result;
+		}
+
+		if (!DeviceCommunicationBasics.HandshakeMessageStartTokens.Contains(data.Span[0]))
+		{
+			result.ErrorCode = 3;
+			result.ErrorMessage = $"First char {data.Span[0]:X2} is not an allowed handshake char!";
+			return result;
+		}
+
+		result.DataMessage = new HandshakeMessage(MessageTypeEnum.Received)
+		{
+			HandshakeMessageType = data.Span[0],
+			RawMessageData = data.ToArray()
+		};
+		return result;
+	}
+
+	/// <summary>
+	/// Encodes a message to a byte array to send to receiver
+	/// </summary>
+	/// <param name="message">Data message to send</param>
+	/// <returns>Byte array as optimized <see cref="ReadOnlyMemory{T}"/> to send</returns>
+	public override OutboundCodecResult EncodeDataMessage(IDataMessage message)
+	{
+		var result = new OutboundCodecResult();
+
+		if (message is not HandshakeMessage hMessage)
+		{
+			result.ErrorMessage = "HandshakeMessage required for HandshakeMessageCodec";
+			result.ErrorCode = 1;
+			return result;
+		}
+
+		message.RawMessageData = new[] { hMessage.HandshakeMessageType };
+		return result;
+	}
+}
 ```
+
+## Data message codec implementation
 
 ``` csharp
 

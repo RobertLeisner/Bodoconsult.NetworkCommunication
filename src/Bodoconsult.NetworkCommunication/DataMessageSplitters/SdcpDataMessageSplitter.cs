@@ -4,7 +4,7 @@ using System.Buffers;
 using Bodoconsult.NetworkCommunication.Helpers;
 using Bodoconsult.NetworkCommunication.Interfaces;
 
-namespace Bodoconsult.NetworkCommunication.DataMessaging.DataMessageSplitter
+namespace Bodoconsult.NetworkCommunication.DataMessageSplitters
 {
     /// <summary>
     /// Implementation for <see cref="IDataMessageSplitter"/> for SDCP protocol
