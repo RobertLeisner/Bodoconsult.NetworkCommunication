@@ -851,7 +851,197 @@ public class SdcpHandshakeMessageCodec : BaseDataMessageCodec
 In the most case you will have to implement either a set off different data message codecs to encode and decode IDataMessage implementation or you implement one basic data message code for a base message containing different data blocks to be encode or decode by different IDataBlockCodec implementations.
 
 ``` csharp
+/// <summary>
+/// Codec to encode and decode device data messages for SDCP protocol
+/// </summary>
+public class SdcpDataMessageCodec : BaseDataMessageCodec
+{
 
+    public readonly IDataBlockCodingProcessor DataBlockCodingProcessor;
+
+
+    public SdcpDataMessageCodec(IDataBlockCodingProcessor dataBlockCodingProcessor)
+    {
+        DataBlockCodingProcessor = dataBlockCodingProcessor;
+
+        ExpectedMinimumLength = DeviceCommunicationBasics.DataMessageMinPacketSize;
+        ExpectedMaximumLength = DeviceCommunicationBasics.DataMessageMaxPacketSize;
+    }
+
+    /// <summary>
+    /// Decode a data message to an <see cref="IDataMessage"/> instance
+    /// </summary>
+    /// <param name="data">Data message bytes received</param>
+    /// <returns>Decoding result</returns>
+    public override InboundCodecResult DecodeDataMessage(Memory<byte> data)
+    {
+
+        var result = CheckExpectedLengths(data.Length);
+
+        if (result.ErrorCode != 0)
+        {
+            return result;
+        }
+
+        try
+        {
+
+            IDataBlock dataBlock;
+
+            // Extract header data from the byte array and store it to message properties if provided
+
+            // Now get the delivered datablock
+
+            var dataBlockBytes = data.Slice(1, data.Length - 1);
+
+            try
+            {
+                dataBlock = DataBlockCodingProcessor.FromBytesToDataBlock(dataBlockBytes);
+            }
+            catch (Exception dataBlockException)
+            {
+                result.ErrorMessage = $"DataBlock {DataMessageHelper.ByteArrayToString(dataBlockBytes)}: decoding failed: {dataBlockException}";
+                result.ErrorCode = 4;
+                return result;
+            }
+
+
+
+            var dataMessage = new SdcpDataMessage
+            {
+                DataBlock = dataBlock
+            };
+
+            result.DataMessage = dataMessage;
+            return result;
+
+        }
+        catch (Exception exception)
+        {
+            result.ErrorMessage = $"DataMessage {DataMessageHelper.ByteArrayToString(data)}: decoding failed: {exception.Message}";
+            result.ErrorCode = 5;
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// Encodes a message to a byte array to send to receiver
+    /// </summary>
+    /// <param name="message">Data message to send</param>
+    /// <returns>Byte array as optimized <see cref="ReadOnlyMemory{T}"/> to send</returns>
+    public override OutboundCodecResult EncodeDataMessage(IDataMessage message)
+    {
+        var result = new OutboundCodecResult();
+        if (message is not SdcpDataMessage tMessage)
+        {
+            result.ErrorMessage = "SdcpDataMessage required for SdcpDataMessageCodec";
+            result.ErrorCode = 1;
+            return result;
+        }
+
+        var data = new List<byte> { DeviceCommunicationBasics.Stx };
+
+        // Add the datablock now if required
+        try
+        {
+            DataBlockCodingProcessor.FromDataBlockToBytes(data, tMessage.DataBlock);
+        }
+        catch (Exception exception)
+        {
+            result.ErrorMessage = $"SdcpDataMessageCodec: exception raised during encoding: {exception}";
+            result.ErrorCode = 4;
+            return result;
+        }
+
+        // Add the final ETX now
+        data.Add(DeviceCommunicationBasics.Etx);
+
+        tMessage.RawMessageData = data.ToArray().AsMemory();
+
+        return result;
+    }
+}
+```
+
+# Implement your datablock codecs: IDataBlockCodec
+
+## Implement a datablock class based on IDataBlock
+
+The following example is pretty simply take the delivered byte data in property Data.
+
+In the real world you normally will add another properties loaded by the codec implementation for decoding codec and generating a byte array from them for a encoding codec. 
+
+``` csharp
+/// <summary>
+/// Dummy data block
+/// </summary>
+public class SdcpDummyDatablock: IDataBlock
+{
+	/// <summary>
+	/// Data contains the bytes of the Data except the byte representing datablock type
+	/// </summary>
+	public Memory<byte> Data { get; set; }
+
+	/// <summary>
+	/// Code for the datablock type
+	/// </summary>
+	public char DataBlockType { get; set; }= 'x';
+}
+```
+
+## Implement the codec now
+
+``` csharp
+/// <summary>
+/// Datablock codec example
+/// </summary>
+public class SdcpDummyDataBlockCodec : IDataBlockCodec
+{
+	/// <summary>
+	/// Method encode an instance of Datablock in bytes array.
+	/// Method is called when a message is sent to the device
+	/// </summary>
+	/// <param name="data">The array as list to add the datablock to</param>
+	/// <param name="datablock">Current datablock object</param>
+	/// <returns>a byte array with datablock infos</returns>
+	public void EncodeDataBlock(List<byte> data, IDataBlock datablock)
+	{
+		if (datablock is not SdcpDummyDatablock db)
+		{
+			throw new ArgumentException("Wrong type of datablock");
+		}
+
+		// You should add some datablock validation here
+
+		// Add data block type
+		data.Add(Convert.ToByte(datablock.DataBlockType));
+
+		// Now add the data or place any logic here to create byte array from your specific datablock
+		foreach (var b in db.Data.Span)
+		{
+			data.Add(b);
+		}
+	}
+
+	/// <summary>
+	/// Method decodes an incoming bytes array to an instance of Datablock object
+	/// Method is used while receiving bytes from device
+	/// </summary>
+	/// <param name="datablockBytes">Datablock bytes received</param>
+	/// <returns>Datablock object</returns>
+	public IDataBlock DecodeDataBlock(Memory<byte> datablockBytes)
+	{
+
+		// You should add some datablock validation here
+
+		// Now create your datablock as request by specs here
+		return new SdcpDummyDatablock
+		{
+			Data = datablockBytes,
+			DataBlockType = 'x'
+		};
+	}
+}
 ```
 
 # Implement factory for handshakes to sent to device: IDataMessageHandshakeFactory
@@ -909,8 +1099,109 @@ public class SdcpHandshakeFactory : IDataMessageHandshakeFactory
 }
 ```
 
-``` csharp
+# Implement your messaging package: IDataMessageProcessingPackage
 
+The implementation of IDataMessageProcessingPackage brings all components required for client server network communication based on Bodoconsult.NetworkCommunication together.
+
+The implementation should have a ctor loading the IDataMessagingConfig to use. See example below for SDCP protocol:
+
+``` csharp
+/// <summary>
+/// Current implementation of <see cref="IDataMessageProcessingPackage"/> for SDCP protocol
+/// </summary>
+public class SdcpDataMessageProcessingPackage : IDataMessageProcessingPackage
+{
+	/// <summary>
+	/// Default ctor
+	/// </summary>
+	public SdcpDataMessageProcessingPackage(IDataMessagingConfig dataMessagingConfig)
+	{
+
+		DataMessagingConfig = dataMessagingConfig;
+
+		// *******************************
+		// Now setup the dependent objects
+
+		// 1. Message splitter
+		DataMessageSplitter = new SdcpDataMessageSplitter();
+
+		// 2. Codecs
+		DataMessageCodingProcessor = new DefaultDataMessageCodingProcessor();
+		LoadCodecs();
+
+		// 3. Internal forwarding
+		DataMessageProcessor = new SdcpDataMessageProcessor(dataMessagingConfig);
+
+		// 4. Wait state handler
+		WaitStateManager = new DefaultWaitStateManager(dataMessagingConfig);
+
+		// 5. Handshake validator
+		HandshakeDataMessageValidator = new SdcpHandshakeDataMessageValidator();
+
+		// 6. Data message validator
+		DataMessageValidator = new SdcpDataMessageValidator();
+
+		// 7. Handshake creation factory
+		DataMessageHandshakeFactory = new SdcpHandshakeFactory();
+	}
+
+	private void LoadCodecs()
+	{
+		var handShakeCodec = new SdcpHandshakeMessageCodec();
+		DataMessageCodingProcessor.MessageCodecs.Add(handShakeCodec);
+
+		var processor = new DefaultDataBlockCodingProcessor();
+
+		// Load your datablock codes here
+		processor.LoadDataBlockCodecs('x', new SdcpDummyDataBlockCodec());
+
+		var towerMessageCodec = new SdcpDataMessageCodec(processor);
+		DataMessageCodingProcessor.MessageCodecs.Add(towerMessageCodec);
+
+		var rawCodec = new RawDataMessageCodec();
+		DataMessageCodingProcessor.MessageCodecs.Add(rawCodec);
+	}
+
+	/// <summary>
+	/// Current data messaging config
+	/// </summary>
+	public IDataMessagingConfig DataMessagingConfig { get; }
+
+	/// <summary>
+	/// Current data message splitter
+	/// </summary>
+	public IDataMessageSplitter DataMessageSplitter { get; }
+
+	/// <summary>
+	/// Current data message coding processor
+	/// </summary>
+	public IDataMessageCodingProcessor DataMessageCodingProcessor { get; }
+
+	/// <summary>
+	/// Current data message processor for internal forwarding of the received messages
+	/// </summary>
+	public IDataMessageProcessor DataMessageProcessor { get; }
+
+	/// <summary>
+	/// Current wait state manager
+	/// </summary>
+	public IWaitStateManager WaitStateManager { get; }
+
+	/// <summary>
+	/// Current validator impl for handshake messages
+	/// </summary>
+	public IHandshakeDataMessageValidator HandshakeDataMessageValidator { get; }
+
+	/// <summary>
+	/// Current validator impl for data messages
+	/// </summary>
+	public IDataMessageValidator DataMessageValidator { get; }
+
+	/// <summary>
+	/// Factory for creation of handshakes to be sent for received messages
+	/// </summary>
+	public IDataMessageHandshakeFactory DataMessageHandshakeFactory { get; }
+}
 ```
 
 ``` csharp

@@ -2,7 +2,6 @@
 
 using Bodoconsult.NetworkCommunication.DataMessages;
 using Bodoconsult.NetworkCommunication.Interfaces;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bodoconsult.NetworkCommunication.DataMessageCodecs
 {

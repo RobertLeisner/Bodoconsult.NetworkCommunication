@@ -1,15 +1,13 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
-using System.Text;
 using Bodoconsult.NetworkCommunication.DataMessages;
-using Bodoconsult.NetworkCommunication.EnumAndStates;
 using Bodoconsult.NetworkCommunication.Helpers;
 using Bodoconsult.NetworkCommunication.Interfaces;
 
 namespace Bodoconsult.NetworkCommunication.DataMessageCodecs
 {
     /// <summary>
-    /// Codec to encode and decode device data messages
+    /// Codec to encode and decode device data messages for SDCP protocol
     /// </summary>
     public class SdcpDataMessageCodec : BaseDataMessageCodec
     {
@@ -43,7 +41,11 @@ namespace Bodoconsult.NetworkCommunication.DataMessageCodecs
             try
             {
 
-                IDataBlock dataBlock = null;
+                IDataBlock dataBlock;
+
+                // Extract header data from the byte array and store it to message properties if provided
+
+                // Now get the delivered datablock
 
                 var dataBlockBytes = data.Slice(1, data.Length - 1);
 
@@ -59,7 +61,8 @@ namespace Bodoconsult.NetworkCommunication.DataMessageCodecs
                 }
 
 
-                var dataMessage = new SdcpDataMessage()
+
+                var dataMessage = new SdcpDataMessage
                 {
                     DataBlock = dataBlock
                 };
@@ -101,7 +104,7 @@ namespace Bodoconsult.NetworkCommunication.DataMessageCodecs
             }
             catch (Exception exception)
             {
-                result.ErrorMessage = $"SmdTowerDataMessageCodec: exception raised during encoding: {exception}";
+                result.ErrorMessage = $"SdcpDataMessageCodec: exception raised during encoding: {exception}";
                 result.ErrorCode = 4;
                 return result;
             }

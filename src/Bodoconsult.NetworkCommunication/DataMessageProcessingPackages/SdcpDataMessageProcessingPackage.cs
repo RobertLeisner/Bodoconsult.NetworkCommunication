@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
 
+using Bodoconsult.NetworkCommunication.DataBlockCodecs;
 using Bodoconsult.NetworkCommunication.DataBlockCodingProcessors;
 using Bodoconsult.NetworkCommunication.DataMessageCodecs;
 using Bodoconsult.NetworkCommunication.DataMessageCodingProcessors;
@@ -14,7 +15,7 @@ using Bodoconsult.NetworkCommunication.TcpIp.Sending;
 namespace Bodoconsult.NetworkCommunication.DataMessageProcessingPackages
 {
     /// <summary>
-    /// Current implementation of <see cref="IDataMessageProcessingPackage"/> for firmware versions starting with 100. This is the top level class for firmware specific protocol implementations
+    /// Current implementation of <see cref="IDataMessageProcessingPackage"/> for SDCP protocol
     /// </summary>
     public class SdcpDataMessageProcessingPackage : IDataMessageProcessingPackage
     {
@@ -57,7 +58,11 @@ namespace Bodoconsult.NetworkCommunication.DataMessageProcessingPackages
             var handShakeCodec = new SdcpHandshakeMessageCodec();
             DataMessageCodingProcessor.MessageCodecs.Add(handShakeCodec);
 
-            var processor = new SdcpDataBlockCodingProcessor();
+            var processor = new DefaultDataBlockCodingProcessor();
+
+            // Load your datablock codes here
+            processor.LoadDataBlockCodecs('x', new SdcpDummyDataBlockCodec());
+
             var towerMessageCodec = new SdcpDataMessageCodec(processor);
             DataMessageCodingProcessor.MessageCodecs.Add(towerMessageCodec);
 

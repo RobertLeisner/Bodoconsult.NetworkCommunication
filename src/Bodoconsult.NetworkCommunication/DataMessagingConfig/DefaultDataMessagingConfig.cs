@@ -7,7 +7,7 @@ using Bodoconsult.NetworkCommunication.Interfaces;
 namespace Bodoconsult.NetworkCommunication.DataMessagingConfig
 {
     /// <summary>
-    /// Config file for one the client-server network communication with one client device
+    /// Default config file for one the client-server network communication with one client device
     /// </summary>
     public class DefaultDataMessagingConfig: IDataMessagingConfigTcpIp
     {

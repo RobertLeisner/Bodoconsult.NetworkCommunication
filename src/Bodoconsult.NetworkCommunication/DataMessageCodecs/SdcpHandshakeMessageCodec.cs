@@ -63,7 +63,7 @@ namespace Bodoconsult.NetworkCommunication.DataMessageCodecs
                 return result;
             }
 
-            message.RawMessageData = new[] { hMessage.HandshakeMessageType };
+            message.RawMessageData = new[] { hMessage.HandshakeMessageType};
             return result;
         }
     }

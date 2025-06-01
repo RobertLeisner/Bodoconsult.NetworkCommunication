@@ -4,6 +4,15 @@ namespace Bodoconsult.NetworkCommunication.Interfaces
 {
     public interface IDataBlockCodingProcessor
     {
+
+        /// <summary>
+        /// Load a <see cref="IDataBlockCodec"/> with the key char to identify the datablock. Key char is always the first char in a datablock byte array
+        /// </summary>
+        /// <param name="key">Key char to identify the datablock. Key char is always the first char in a datablock byte array</param>
+        /// <param name="dataBlockCodec">Data block codec to load for the key char</param>
+        void LoadDataBlockCodecs(char key, IDataBlockCodec dataBlockCodec);
+
+
         /// <summary>
         /// Create a byte array to send to device from datablock
         /// </summary>

@@ -1,15 +1,14 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Bodoconsult.NetworkCommunication.DataBlocks;
 using Bodoconsult.NetworkCommunication.Interfaces;
 
 namespace Bodoconsult.NetworkCommunication.DataBlockCodecs
 {
-    public class SdcpDummyDataBlockCodec: IDataBlockCodec
+    /// <summary>
+    /// Datablock codec example
+    /// </summary>
+    public class SdcpDummyDataBlockCodec : IDataBlockCodec
     {
         /// <summary>
         /// Method encode an instance of Datablock in bytes array.
@@ -20,7 +19,21 @@ namespace Bodoconsult.NetworkCommunication.DataBlockCodecs
         /// <returns>a byte array with datablock infos</returns>
         public void EncodeDataBlock(List<byte> data, IDataBlock datablock)
         {
-            throw new NotImplementedException();
+            if (datablock is not SdcpDummyDatablock db)
+            {
+                throw new ArgumentException("Wrong type of datablock");
+            }
+
+            // You should add some datablock validation here
+
+            // Add data block type
+            data.Add(Convert.ToByte(datablock.DataBlockType));
+
+            // Now add the data or place any logic here to create byte array from your specific datablock
+            foreach (var b in db.Data.Span)
+            {
+                data.Add(b);
+            }
         }
 
         /// <summary>
@@ -31,7 +44,15 @@ namespace Bodoconsult.NetworkCommunication.DataBlockCodecs
         /// <returns>Datablock object</returns>
         public IDataBlock DecodeDataBlock(Memory<byte> datablockBytes)
         {
-            throw new NotImplementedException();
+
+            // You should add some datablock validation here
+
+            // Now create your datablock as request by specs here
+            return new SdcpDummyDatablock
+            {
+                Data = datablockBytes,
+                DataBlockType = 'x'
+            };
         }
     }
 }

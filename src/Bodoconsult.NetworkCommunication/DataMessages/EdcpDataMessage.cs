@@ -36,7 +36,7 @@ public class EdcpDataMessage : IDataMessage
     public bool WaitForAcknowledgement { get; set; }
 
     /// <summary>
-    /// Should a acknowledgement be sent if the message is received
+    /// Should an acknowledgement be sent if the message is received
     /// </summary>
     public bool AnswerWithAcknowledgement { get; set; }
 
@@ -67,12 +67,12 @@ public class EdcpDataMessage : IDataMessage
     /// <returns>Info string</returns>
     public string ToInfoString()
     {
-        return $"EdcpDataMessage ID {MessageId} {MessageType.ToString()} {ArrayHelper.GetStringFromArrayCsharpStyle(RawMessageData)}";
+        return $"EdcpDataMessage ID {MessageId} {MessageType.ToString()} Block {BlockCode}: {ArrayHelper.GetStringFromArrayCsharpStyle(RawMessageData)}";
     }
 
     public string ToShortInfoString()
     {
-        return $"EdcpDataMessage ID {MessageId} {MessageType.ToString()}";
+        return $"EdcpDataMessage ID {MessageId} {MessageType.ToString()} Block {BlockCode}";
     }
 
     /// <summary>

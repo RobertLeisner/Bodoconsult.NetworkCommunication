@@ -5,12 +5,22 @@ using Bodoconsult.NetworkCommunication.Interfaces;
 namespace Bodoconsult.NetworkCommunication.DataBlockCodingProcessors;
 
 /// <summary>
-/// Base class for handling of the usage of the correct datablock codec for processing a datablock 
+/// Default implementation for handling of the usage of the correct datablock codec for processing a datablock 
 /// </summary>
-public abstract class BaseDataBlockCodingProcessor : IDataBlockCodingProcessor
+public class DefaultDataBlockCodingProcessor : IDataBlockCodingProcessor
 
 {
     protected readonly Dictionary<char, IDataBlockCodec> DatablockCodecs = new();
+
+    /// <summary>
+    /// Load a <see cref="IDataBlockCodec"/> with the key char to identify the datablock. Key char is always the first char in a datablock byte array
+    /// </summary>
+    /// <param name="key">Key char to identify the datablock. Key char is always the first char in a datablock byte array</param>
+    /// <param name="dataBlockCodec">Data block codec to load for the key char</param>
+    public void LoadDataBlockCodecs(char key, IDataBlockCodec dataBlockCodec)
+    {
+        DatablockCodecs.Add(key, dataBlockCodec);
+    }
 
     /// <summary>
     /// Create a byte array to send to tower from datablock
@@ -31,8 +41,6 @@ public abstract class BaseDataBlockCodingProcessor : IDataBlockCodingProcessor
             return;
         }
         dataBlockCodec.EncodeDataBlock(data, dataBlock);
-        return;
-
     }
 
 
