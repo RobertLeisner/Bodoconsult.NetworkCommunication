@@ -2,9 +2,9 @@
 
 using Bodoconsult.App.Interfaces;
 using Bodoconsult.App.Logging;
+using Bodoconsult.NetworkCommunication.DataMessages;
 using Bodoconsult.NetworkCommunication.EnumAndStates;
 using Bodoconsult.NetworkCommunication.Interfaces;
-using Bodoconsult.NetworkCommunication.Messages;
 using Bodoconsult.NetworkCommunication.TcpIp;
 using Bodoconsult.NetworkCommunication.TcpIp.Sending;
 using Bodoconsult.NetworkCommunication.Tests.TestData;

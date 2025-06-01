@@ -3,8 +3,8 @@
 using Bodoconsult.NetworkCommunication.Delegates;
 using Bodoconsult.NetworkCommunication.Interfaces;
 using Bodoconsult.App.Helpers;
-using Bodoconsult.NetworkCommunication.Messages;
 using System.Diagnostics;
+using Bodoconsult.NetworkCommunication.DataMessages;
 using Bodoconsult.NetworkCommunication.EnumAndStates;
 
 namespace Bodoconsult.NetworkCommunication.TcpIp.Sending

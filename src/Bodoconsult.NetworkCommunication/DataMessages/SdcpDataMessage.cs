@@ -1,15 +1,10 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Bodoconsult.App.Helpers;
 using Bodoconsult.NetworkCommunication.EnumAndStates;
 using Bodoconsult.NetworkCommunication.Interfaces;
 
-namespace Bodoconsult.NetworkCommunication.Messages
+namespace Bodoconsult.NetworkCommunication.DataMessages
 {
     /// <summary>
     /// Basic implementation of <see cref="IDataMessage"/> for SDCP protocol

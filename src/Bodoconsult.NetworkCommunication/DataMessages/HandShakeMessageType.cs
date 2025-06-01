@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
-namespace Bodoconsult.NetworkCommunication.Messages
+namespace Bodoconsult.NetworkCommunication.DataMessages
 {
     /// <summary>
     /// This class holds all the handshake message types

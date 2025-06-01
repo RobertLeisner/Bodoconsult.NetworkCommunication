@@ -7,9 +7,9 @@ using Bodoconsult.NetworkCommunication.Interfaces;
 namespace Bodoconsult.NetworkCommunication.DataMessageProcessingPackages;
 
 /// <summary>
-/// Factory for creating handshakes for SDCP protocol to sent to the client
+/// Factory for creating handshakes for EDCP protocol to sent to the client
 /// </summary>
-public class SdcpHandshakeFactory : IDataMessageHandshakeFactory
+public class EdcpHandshakeFactory : IDataMessageHandshakeFactory
 {
     /// <summary>
     /// Get an ACK handshake message
@@ -18,9 +18,19 @@ public class SdcpHandshakeFactory : IDataMessageHandshakeFactory
     /// <returns>ACK handshake message to send</returns>
     public IDataMessage GetAckResponse(IDataMessage message)
     {
-        var ack = new HandshakeMessage( MessageTypeEnum.Sent)
+        if (message is not EdcpDataMessage em)
+        {
+            var can = new EdcpHandshakeMessage(MessageTypeEnum.Sent)
+            {
+                HandshakeMessageType = HandShakeMessageType.Can,
+            };
+            return can;
+        }
+
+        var ack = new EdcpHandshakeMessage(MessageTypeEnum.Sent)
         {
             HandshakeMessageType = HandShakeMessageType.Ack,
+            BlockCode = em.BlockCode
         };
 
         return ack;
@@ -33,9 +43,19 @@ public class SdcpHandshakeFactory : IDataMessageHandshakeFactory
     /// <returns>NAK handshake message to send</returns>
     public IDataMessage GetNakResponse(IDataMessage message)
     {
-        var nak = new HandshakeMessage(MessageTypeEnum.Sent)
+        if (message is not EdcpDataMessage em)
+        {
+            var can = new EdcpHandshakeMessage(MessageTypeEnum.Sent)
+            {
+                HandshakeMessageType = HandShakeMessageType.Can,
+            };
+            return can;
+        }
+
+        var nak = new EdcpHandshakeMessage(MessageTypeEnum.Sent)
         {
             HandshakeMessageType = HandShakeMessageType.Nack,
+            BlockCode = em.BlockCode
         };
         return nak;
     }
@@ -47,9 +67,19 @@ public class SdcpHandshakeFactory : IDataMessageHandshakeFactory
     /// <returns>CAN handshake message to send</returns>
     public IDataMessage GetCanResponse(IDataMessage message)
     {
-        var can = new HandshakeMessage(MessageTypeEnum.Sent)
+        if (message is not EdcpDataMessage em)
+        {
+            var can1 = new EdcpHandshakeMessage(MessageTypeEnum.Sent)
+            {
+                HandshakeMessageType = HandShakeMessageType.Can,
+            };
+            return can1;
+        }
+
+        var can = new EdcpHandshakeMessage(MessageTypeEnum.Sent)
         {
             HandshakeMessageType = HandShakeMessageType.Can,
+            BlockCode = em.BlockCode
         };
         return can;
     }

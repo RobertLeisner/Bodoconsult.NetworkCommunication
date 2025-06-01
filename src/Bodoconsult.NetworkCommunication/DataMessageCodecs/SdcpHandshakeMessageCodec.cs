@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
+using Bodoconsult.NetworkCommunication.DataMessages;
 using Bodoconsult.NetworkCommunication.EnumAndStates;
 using Bodoconsult.NetworkCommunication.Interfaces;
-using Bodoconsult.NetworkCommunication.Messages;
 
 namespace Bodoconsult.NetworkCommunication.DataMessageCodecs
 {

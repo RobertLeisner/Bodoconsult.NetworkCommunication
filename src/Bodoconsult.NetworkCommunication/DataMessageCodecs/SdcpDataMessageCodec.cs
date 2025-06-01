@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
 using System.Text;
+using Bodoconsult.NetworkCommunication.DataMessages;
 using Bodoconsult.NetworkCommunication.EnumAndStates;
 using Bodoconsult.NetworkCommunication.Helpers;
 using Bodoconsult.NetworkCommunication.Interfaces;
-using Bodoconsult.NetworkCommunication.Messages;
 
 namespace Bodoconsult.NetworkCommunication.DataMessageCodecs
 {

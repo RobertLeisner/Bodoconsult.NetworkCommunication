@@ -3,7 +3,7 @@
 using Bodoconsult.NetworkCommunication.EnumAndStates;
 using Bodoconsult.NetworkCommunication.Interfaces;
 
-namespace Bodoconsult.NetworkCommunication.Messages
+namespace Bodoconsult.NetworkCommunication.DataMessages
 {
     /// <summary>
     /// Represents a handshake message
@@ -30,10 +30,10 @@ namespace Bodoconsult.NetworkCommunication.Messages
         {
             return HandshakeMessageType switch
             {
-                6 => "HandshakeMessage ACK",
-                21 => "HandshakeMessage NAK",
-                24 => "HandshakeMessage CAN",
-                _ => "HandshakeMessage Unknown"
+                6 => "Handshake ACK",
+                21 => "Handshake NAK",
+                24 => "Handshake CAN",
+                _ => "Handshake Unknown"
             };
         }
 
@@ -45,10 +45,10 @@ namespace Bodoconsult.NetworkCommunication.Messages
         {
             return HandshakeMessageType switch
             {
-                6 => "HandshakeMessage ACK",
-                21 => "HandshakeMessage NAK",
-                24 => "HandshakeMessage CAN",
-                _ => "HandshakeMessage Unknown"
+                6 => "Handshake ACK",
+                21 => "Handshake NAK",
+                24 => "Handshake CAN",
+                _ => "Handshake Unknown"
             };
         }
 
@@ -60,10 +60,10 @@ namespace Bodoconsult.NetworkCommunication.Messages
         {
             return HandshakeMessageType switch
             {
-                6 => "HandshakeMessage ACK",
-                21 => "HandshakeMessage NAK",
-                24 => "HandshakeMessage CAN",
-                _ => "HandshakeMessage Unknown"
+                6 => "Handshake ACK",
+                21 => "Handshake NAK",
+                24 => "Handshake CAN",
+                _ => "Handshake Unknown"
             };
         }
     }

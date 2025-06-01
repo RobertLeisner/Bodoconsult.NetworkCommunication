@@ -4,7 +4,7 @@ using Bodoconsult.NetworkCommunication.EnumAndStates;
 using Bodoconsult.NetworkCommunication.Helpers;
 using Bodoconsult.NetworkCommunication.Interfaces;
 
-namespace Bodoconsult.NetworkCommunication.Messages
+namespace Bodoconsult.NetworkCommunication.DataMessages
 {
     /// <summary>
     /// Sends a raw byte data message to the device. Intended mainly for outgoing message to send

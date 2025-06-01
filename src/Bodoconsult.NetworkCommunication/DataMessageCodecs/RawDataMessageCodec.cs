@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
+using Bodoconsult.NetworkCommunication.DataMessages;
 using Bodoconsult.NetworkCommunication.Interfaces;
-using Bodoconsult.NetworkCommunication.Messages;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bodoconsult.NetworkCommunication.DataMessageCodecs

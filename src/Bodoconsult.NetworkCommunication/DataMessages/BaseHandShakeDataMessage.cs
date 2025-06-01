@@ -3,7 +3,7 @@
 using Bodoconsult.NetworkCommunication.EnumAndStates;
 using Bodoconsult.NetworkCommunication.Interfaces;
 
-namespace Bodoconsult.NetworkCommunication.Messages;
+namespace Bodoconsult.NetworkCommunication.DataMessages;
 
 /// <summary>
 /// Base class for <see cref="IDataMessage"/> implementations

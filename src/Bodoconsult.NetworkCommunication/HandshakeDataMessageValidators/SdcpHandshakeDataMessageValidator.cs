@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Bodoconsult EDV-Dienstleistungen GmbH. All rights reserved.
 
 
+using Bodoconsult.NetworkCommunication.DataMessages;
 using Bodoconsult.NetworkCommunication.EnumAndStates;
 using Bodoconsult.NetworkCommunication.Interfaces;
-using Bodoconsult.NetworkCommunication.Messages;
 
 namespace Bodoconsult.NetworkCommunication.HandshakeDataMessageValidators
 {
@@ -30,7 +30,7 @@ namespace Bodoconsult.NetworkCommunication.HandshakeDataMessageValidators
 
             if (handshakeMessage is not HandshakeMessage)
             {
-                return new DataMessageValidatorResult(false, "Received message is NOT a handshake message");
+                return new DataMessageValidatorResult(false, "Received message is NOT a valid handshake message");
             }
 
             return new DataMessageValidatorResult(true, string.Empty);
