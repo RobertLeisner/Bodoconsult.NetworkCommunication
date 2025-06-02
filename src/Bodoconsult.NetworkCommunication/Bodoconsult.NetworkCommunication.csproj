@@ -10,4 +10,8 @@
     <PackageReference Include="Bodoconsult.App" Version="1.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="OrderManagement\" />
+  </ItemGroup>
+
 </Project>
